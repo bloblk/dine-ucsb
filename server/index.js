@@ -1,13 +1,13 @@
-// Import libraries
+// Set up Express
 const express = require('express');
-const mongoose = require('mongoose');
-
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;;
 
-mongoose.connect('mongodb+srv://adamwangsd:Solana92130@dineucsb.ibfvocf.mongodb.net/');
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', () => {
-  console.log('Connected to MongoDB');
+// Handle Requests to Server
+app.get('/api', (req, res) => {
+    res.json({ message: "Hello from server!" });
 });
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
