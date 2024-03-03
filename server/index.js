@@ -33,7 +33,9 @@ function getMealCodes(date, commonCode) {
     .then(jsonData => {
         let meals = [];
         for (const meal of jsonData) {
-            meals.push(meal.mealCode);
+            if (meal.open!==null) {
+                meals.push(meal.mealCode);
+            }
         };
         return meals;
     })
