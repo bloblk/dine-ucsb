@@ -12,6 +12,10 @@ app.get('/mealCodes', async (req, res) => {
     console.log(`Getting meal codes for ${req.query.date}, ${req.query.commonCode}`);
     res.json({mealsServed: await getMealCodes(req.query.date, req.query.commonCode)});
 });
+app.get('/menuItems', async (req, res) =>{
+    console.log(`Getting menu items for ${req.query.date}, ${req.query.commonCode}, ${req.query.mealCode}`);
+    res.json({menuItems: await getMenuItems(req.query.date, req.query.commonCode, req.query.mealCode)});
+}); 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
@@ -26,7 +30,7 @@ function getMealCodes(date, commonCode) {
     return fetch(`${commonsUrl}/hours/${date}/${commonCode}?ucsb-api-key=${ucsb_api_key}`)
     .then(response => {
         if (response.status!=200) {
-            throw new Error(`Request failed with status ${response.status}: ${response.statusText}`)
+            throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
         }
         return response.json();
     })
@@ -41,5 +45,26 @@ function getMealCodes(date, commonCode) {
     })
     .catch((error) => {
         console.error('Error:', error);
-    }); 
+    })
+}
+function getMenuItems(date, commonCode, mealCode) {
+    return fetch(`${menuUrl}/${date}/${commonCode}/${mealCode}?ucsb-api-key=${ucsb_api_key}`)
+    .then(response => {
+        if (response.status!=200) {
+            throw new Error(`Request failed with status ${response.status}: ${response.statusText}`);
+        }
+        return response.json(); 
+    })
+    .then(jsonData => {
+        let items = [];
+        for (const entree of jsonData) {
+            if (!items.includes(entree.name)) {
+                items.push(entree.name);
+            }
+        };
+        return items;
+    })
+    .catch((error) => {
+        console.error('Error: ', error);
+    })
 }
