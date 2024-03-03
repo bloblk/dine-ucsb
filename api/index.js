@@ -67,3 +67,5 @@ function getMenuItems(date, commonCode, mealCode) {
         console.error('Error: ', error);
     })
 }
+
+module.exports = app;
